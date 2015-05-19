@@ -75,8 +75,6 @@ class JavaBuilder(Builder):
         main = '%s/%s.java' % ('src', self.main_class.replace('.', '/'),)
         cp = ';'.join([self.libdir + '/' + s for s in self.depends])
         cmd = ['javac', '-sourcepath', self.srcdir, '-cp', cp, '-d', self.bindir + '/classes', main]
-        with open('log.txt', 'w') as f:
-            f.write(' '.join(cmd))
         self.run(cmd)
 
     def do_resources(self):

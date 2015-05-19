@@ -7,7 +7,6 @@ import subprocess
 sys.path.append('/Scripts')
 from color_console import *
 
-
 class Builder:
 
     '''Base class for all Build System Builder.'''
@@ -38,6 +37,10 @@ class Builder:
                     try:
                         getattr(self, 'do_' + job)()
                         self.output('Done', True, ok=True)
+                    except subprocess.CalledProcessError, ce:
+                        self.output('Failed', True, err=True)
+                        self.log(job, str(ce))
+                        self.log(job, ce.output)
                     except Exception, e:
                         self.output('Failed', True, err=True)
                         self.log(job, str(e))
