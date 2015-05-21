@@ -4,7 +4,7 @@ import shutil
 import sys
 import time
 import subprocess
-sys.path.append('/Scripts')
+sys.path.append('Y:/Scripts')
 from color_console import *
 
 class Builder:

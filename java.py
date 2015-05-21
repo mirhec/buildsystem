@@ -19,7 +19,7 @@ class JavaBuilder(Builder):
         if 'libdir' not in dir(self):
             self.libdir = 'lib'
         if 'depdir' not in dir(self):
-            self.depdir = '/Lib/Java'
+            self.depdir = 'Y:/Lib/Java'
         if 'srcdir' not in dir(self):
             self.srcdir = 'src'
         if 'bindir' not in dir(self):
@@ -51,7 +51,7 @@ class JavaBuilder(Builder):
             os.remove('lib/%s' % c)
             self.output('Ok\n   ', ok=True)
         self.output('   crypt all ... ')
-        self.run(['java', '-jar', '/Lib/Java/allatori.jar', 'cfg/allatori2.xml'])
+        self.run(['java', '-jar', '/Lib/Java/allatori-5.3.jar', 'cfg/allatori2.xml'])
         shutil.rmtree(self.bindir + '/classes_temp/')
 
     def do_dependencies(self):
@@ -72,10 +72,24 @@ class JavaBuilder(Builder):
             os.mkdir(self.bindir)
         if not os.path.exists(self.bindir + '/classes/'):
             os.mkdir(self.bindir + '/classes/')
-        main = '%s/%s.java' % ('src', self.main_class.replace('.', '/'),)
         cp = ';'.join([self.libdir + '/' + s for s in self.depends])
-        cmd = ['javac', '-sourcepath', self.srcdir, '-cp', cp, '-d', self.bindir + '/classes', main]
-        self.run(cmd)
+        if hasattr(self, 'main_class'):
+            main = '%s/%s.java' % ('src', self.main_class.replace('.', '/'),)
+            cmd = ['javac', '-sourcepath', self.srcdir, '-cp', cp, '-d', self.bindir + '/classes', main]
+            self.run(cmd)
+        else:
+            files = []
+            for (p, dirs, fs) in os.walk(self.srcdir):
+                for f in fs:
+                    if f[-5:] == '.java':
+                        file = p + '\\' + f
+                        file = file.replace('\\', '/')
+                        files.append(file)
+
+            cmd = ['javac', '-sourcepath', self.srcdir, '-cp', cp, '-d', self.bindir + '/classes']
+            cmd.extend(files)
+            self.run(cmd)
+
 
     def do_resources(self):
         '''Copies all resources under `srcdir` dictionary, excluding *.java files.'''
@@ -100,7 +114,10 @@ class JavaBuilder(Builder):
 
     def do_jar(self):
         '''Create jar file.'''
-        self.run(['jar', 'cfe', '%s/%s-%s.jar' % (self.bindir, self.product_title, self.version,), self.main_class, '-C', '%s/classes/' % self.bindir, '.'])
+        if hasattr(self, 'main_class'):
+            self.run(['jar', 'cfe', '%s/%s-%s.jar' % (self.bindir, self.product_title, self.version,), self.main_class, '-C', '%s/classes/' % self.bindir, '.'])
+        else:
+            self.run(['jar', 'cf', '%s/%s-%s.jar' % (self.bindir, self.product_title, self.version,), '-C', '%s/classes/' % self.bindir, '.'])
 
     def do_exe(self):
         '''Create exe file.'''
