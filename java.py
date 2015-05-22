@@ -75,7 +75,7 @@ class JavaBuilder(Builder):
         cp = ';'.join([self.libdir + '/' + s for s in self.depends])
         if hasattr(self, 'main_class'):
             main = '%s/%s.java' % ('src', self.main_class.replace('.', '/'),)
-            cmd = ['javac', '-sourcepath', self.srcdir, '-cp', cp, '-d', self.bindir + '/classes', main]
+            cmd = ['javac', '-encoding', 'utf8', '-sourcepath', self.srcdir, '-cp', cp, '-d', self.bindir + '/classes', main]
             self.run(cmd)
         else:
             files = []
