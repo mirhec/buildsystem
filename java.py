@@ -51,7 +51,7 @@ class JavaBuilder(Builder):
             os.remove('lib/%s' % c)
             self.output('Ok\n   ', ok=True)
         self.output('   crypt all ... ')
-        self.run(['java', '-jar', '/Lib/Java/allatori-5.3.jar', 'cfg/allatori2.xml'])
+        self.run(['java', '-jar', '/Lib/Java/allatori-5.3.jar', 'cfg/allatori.xml'])
         shutil.rmtree(self.bindir + '/classes_temp/')
 
     def do_dependencies(self):
