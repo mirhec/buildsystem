@@ -61,8 +61,9 @@ class JavaBuilder(Builder):
 
     def do_version(self):
         '''Get version from git branch.'''
-        v = self.run(['git', 'rev-parse', '--abbrev-ref', 'HEAD'])
-        v = v.rpartition('/')[2]
+        # v = self.run(['git', 'rev-parse', '--abbrev-ref', 'HEAD'])
+        v = self.run(['git', 'describe', '--tags', '--abbrev=0'])
+        # v = v.rpartition('/')[2]
         v = v.replace('\n', '')
         self.version = v
 
