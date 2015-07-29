@@ -4,12 +4,13 @@ import shutil
 import sys
 import time
 import subprocess
-sys.path.append('Y:/Scripts')
 from color_console import *
 
 class Builder:
-
     '''Base class for all Build System Builder.'''
+    jobmap = {}
+    joborder = []
+    executed = []
 
     def __init__(self):
         self.starttime = time.time()
@@ -27,15 +28,19 @@ class Builder:
         self.initbuild()
         # Get command line args and use them as jobs
         if len(sys.argv) > 1:
-            self.jobs = sys.argv[1:]
+            for job in dict(self.jobmap):
+                if job not in sys.argv[1:]:
+                    del self.jobmap[job]
         self.output(self.__class__.__name__ + ' builds ' + self.product_title, True)
-        if self.joborder and self.jobs:
+        if self.joborder and self.jobmap:
             cnt = 1
             for job in self.joborder:
                 self.output('   ' + str(cnt) + '. ' + job + ' ... ')
-                if job in self.jobs and 'do_' + job in dir(self) and callable(getattr(self, 'do_' + job)):
+                if job in dict(self.jobmap): # and 'do_' + job in dir(self) and callable(getattr(self, 'do_' + job)):
                     try:
-                        getattr(self, 'do_' + job)()
+                        #getattr(self, 'do_' + job)()
+                        self.jobmap[job](self)
+                        self.executed.append(job)
                         self.output('Done', True, ok=True)
                     except subprocess.CalledProcessError, ce:
                         self.output('Failed', True, err=True)
@@ -44,9 +49,9 @@ class Builder:
                     except Exception, e:
                         self.output('Failed', True, err=True)
                         self.log(job, str(e))
-                elif job not in self.jobs:
+                elif job not in dict(self.jobmap):
                     self.output('Skipped', True, warn=True)
-                elif job in self.jobs:
+                elif job in dict(self.jobmap):
                     self.output('Not implemented', True, err=True)
                 cnt += 1
 
@@ -72,7 +77,7 @@ class Builder:
         '''Simple wrapper for subprocess.check_output().'''
         return subprocess.check_output(args, stderr=subprocess.STDOUT)
 
-    def copytree(self, src, dst, exclude_ext=None):
+    def copytree(self, src, dst, exclude_ext=None, compare_date=True):
         '''- Creating the output directory if not already exists
            - Doing the copy directory by recursively calling my own method.
            - When we come to actually copying the file I check if the file is modified then only we should copy.'''
@@ -83,7 +88,16 @@ class Builder:
             s = os.path.join(src, item)
             d = os.path.join(dst, item)
             if os.path.isdir(s):
-                self.copytree(s, d, exclude_ext)
+                self.copytree(s, d, exclude_ext, compare_date)
             elif exclude_ext is None or True not in [d.endswith(ext) for ext in exclude_ext]:
-                if not os.path.exists(d) or os.stat(src).st_mtime - os.stat(dst).st_mtime > 1:
+                if not os.path.exists(d) or not compare_date or os.stat(src).st_mtime - os.stat(dst).st_mtime > 1:
                     shutil.copy2(s, d)
+     
+def task(name):
+    def decorator(func):
+        def wrapper(self):
+            return func(self)
+        Builder.jobmap[name] = wrapper
+        Builder.joborder.append(name)
+        return wrapper
+    return decorator

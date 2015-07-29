@@ -1,0 +1,18 @@
+﻿from builder import Builder, task
+import os
+
+
+class SetupBuilder(Builder):
+    setupdir = '.'
+    setupscript = None
+    product_title = 'Setup'
+    
+    @task('compile_setup')
+    def do_compile_setup(self):
+        '''Compiles the Inno Setup Script `setupscript` into directory `setupdir` if `setupscript` is specified and exists.
+        `setupscript` has to be defined based on the directory `setupdir`.'''
+        if self.setupscript and os.path.exists(os.path.join(self.setupdir, self.setupscript)):
+            d = os.getcwd()
+            os.chdir(self.setupdir)
+            self.run([r'C:\Program Files (x86)\Inno Setup 5\ISCC.exe', '/cc', self.setupscript])
+            os.chdir(d)
