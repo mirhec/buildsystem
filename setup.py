@@ -1,8 +1,8 @@
-﻿from builder import Builder, task
+﻿from base import BaseBuilder, task
 import os
 
 
-class SetupBuilder(Builder):
+class SetupBuilder(BaseBuilder):
     setupdir = '.'
     setupscript = None
     product_title = 'Setup'

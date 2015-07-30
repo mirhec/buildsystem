@@ -11,6 +11,7 @@ class Builder:
     jobmap = {}
     joborder = []
     executed = []
+    product_title = ''
 
     def __init__(self):
         self.starttime = time.time()

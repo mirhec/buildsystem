@@ -1,11 +1,11 @@
-﻿from builder import Builder, task
+﻿from base import BaseBuilder, Builder, task
 
 import os
 import shutil
 import zipfile
 
 
-class JavaBuilder(Builder):
+class JavaBuilder(BaseBuilder):
     libdir = 'lib'
     depdir = 'Y:/Lib/Java'
     srcdir = 'src'
@@ -33,13 +33,6 @@ class JavaBuilder(Builder):
         if not os.path.exists(self.libdir):
             os.mkdir(self.libdir)
         [shutil.copyfile(self.depdir + '/' + l, self.libdir + '/' + l) for l in self.depends]
-
-    @task('version')
-    def do_version(self):
-        '''Get version from git branch.'''
-        v = self.run(['git', 'describe', '--tags', '--abbrev=0'])
-        v = v.replace('\n', '')
-        self.version = v
 
     @task('compile')
     def do_compile(self):
