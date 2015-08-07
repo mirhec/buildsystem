@@ -13,6 +13,7 @@ class JavaBuilder(BaseBuilder):
     jar2exedir = 'cfg'
     version_in_filename = True
     version = None
+    pack_all_in_one_jar = True
 
     def initbuild(self):
         self.cleandirs = [self.bindir, self.libdir]
@@ -83,13 +84,16 @@ class JavaBuilder(BaseBuilder):
 
     @task('lib_classes')
     def do_lib_classes(self):
-        self.output('\n      ')
-        for d in self.depends:
-            l = '%s/%s' % (self.libdir, d,)
-            if os.path.exists(l):
-                self.output('-> ' + d + ' ... ')
-                self.unpack(l, self.bindir + '/classes/')
-                self.output('Ok\n      ', ok=True)
+        if self.pack_all_in_one_jar:
+            self.output('\n      ')
+            for d in self.depends:
+                l = '%s/%s' % (self.libdir, d,)
+                if os.path.exists(l):
+                    self.output('-> ' + d + ' ... ')
+                    self.unpack(l, self.bindir + '/classes/')
+                    self.output('Ok\n      ', ok=True)
+        else:
+            self.output('Skipped\n      ', warn=True)
 
     @task('copy_meta_inf')
     def do_copy_meta_inf(self):
