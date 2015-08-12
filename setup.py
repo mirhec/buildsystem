@@ -6,7 +6,7 @@ class SetupBuilder(BaseBuilder):
     setupdir = '.'
     setupscript = None
     product_title = 'Setup'
-    
+
     @task('compile_setup')
     def do_compile_setup(self):
         '''Compiles the Inno Setup Script `setupscript` into directory `setupdir` if `setupscript` is specified and exists.
