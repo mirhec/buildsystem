@@ -74,3 +74,5 @@ python build.py greet-me
 ```
 
 This would only run the `greet_me` method and output the `greet-all` task as skipped.
+
+![sample](https://cloud.githubusercontent.com/assets/5173805/11562974/8493d2f4-99d1-11e5-801c-698179ca6705.gif)
