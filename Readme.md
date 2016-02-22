@@ -98,4 +98,6 @@ code to your Setup.iss file:
 ```
 
 After this you can use the VERSION constant by inserting `{#VERSION}` into your script, for example in your [Setup] section: 
-```AppVersion={#VERSION}```
+```
+AppVersion={#VERSION}
+```
