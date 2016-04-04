@@ -74,3 +74,30 @@ python build.py greet-me
 ```
 
 This would only run the `greet_me` method and output the `greet-all` task as skipped.
+
+![sample](https://cloud.githubusercontent.com/assets/5173805/11562974/8493d2f4-99d1-11e5-801c-698179ca6705.gif)
+
+## Using the git version info in an Inno Script setup file
+
+The setup.py build script first creates a git.txt file containing the version information read
+from the git tags. After compiling the setup this file will be deleted. If you want to add the
+version information in your Inno Script setup, you just need to read this file by adding the following
+code to your Setup.iss file:
+
+```
+#define FileHandle
+#define FileLine
+#sub ProcessFileLine
+  #pragma message FileLine
+#endsub
+#for {FileHandle = FileOpen("git.txt"); FileHandle && !FileEof(FileHandle); FileLine = FileRead(FileHandle)} ProcessFileLine
+#if FileHandle
+  #expr FileClose(FileHandle)
+#endif
+#define VERSION Copy(FileLine, Pos("/", FileLine) + 1)
+```
+
+After this you can use the VERSION constant by inserting `{#VERSION}` into your script, for example in your [Setup] section: 
+```
+AppVersion={#VERSION}
+```
