@@ -7,21 +7,31 @@ import subprocess
 from color_console import *
 
 jobindex = 1
-def task(name):
-    def decorator(func):
-        global jobindex
 
-        def wrapper(self):
-            return func(self)
+def optional_arg_decorator(fn):
+    def wrapped_decorator(*args):
+        if len(args) == 1 and callable(args[0]):
+            return fn(args[0])
 
-        wrapper.decorator = task
-        wrapper.__name__ = func.__name__
-        wrapper.jobindex = jobindex
-        wrapper.name = name
+        else:
+            def real_decorator(decoratee):
+                return fn(decoratee, *args)
+
+            return real_decorator
+
+    return wrapped_decorator
+
+@optional_arg_decorator
+def task(fn, name, jobidx = -1):
+    global jobindex
+    fn.decorator = task
+    if jobidx != -1:
+        fn.jobindex = jobidx
+    else:
+        fn.jobindex = jobindex
         jobindex += 1
-
-        return wrapper
-    return decorator
+    fn.name = name
+    return fn
 
 
 class Builder:
@@ -48,8 +58,12 @@ class Builder:
         tasks = list(self.get_all_tasks())
         tasks = self.sorttasks(tasks)
         cnt = 1
+        max_job_nr = max([f.jobindex for f in tasks])
 
-        for job in tasks:
+        # for job in tasks:
+        for i in range(1, max_job_nr):
+            jobs = [f for f in tasks if f.jobindex == i]
+            job = jobs[-1]
             self.output('   ' + str(cnt) + '. ' + job.name + ' ... ')
             if job.name not in self.skip and (job.name in sys.argv[1:] or len(sys.argv) <= 1):
                 try:
@@ -111,7 +125,6 @@ class Builder:
             maybeDecorated = getattr(self, maybeDecorated)
             if hasattr(maybeDecorated, 'decorator'):
                 if maybeDecorated.decorator == task:
-                    # print(maybeDecorated, maybeDecorated.__name__, maybeDecorated.jobindex)
                     yield maybeDecorated
 
     def sorttasks(self, tasks):
