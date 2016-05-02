@@ -61,8 +61,10 @@ class Builder:
         max_job_nr = max([f.jobindex for f in tasks])
 
         # for job in tasks:
-        for i in range(1, max_job_nr):
+        for i in range(1, max_job_nr + 1):
             jobs = [f for f in tasks if f.jobindex == i]
+            if len(jobs) <= 0:
+                continue
             job = jobs[-1]
             self.output('   ' + str(cnt) + '. ' + job.name + ' ... ')
             if job.name not in self.skip and (job.name in sys.argv[1:] or len(sys.argv) <= 1):
