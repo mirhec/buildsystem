@@ -71,11 +71,11 @@ class Builder:
                 try:
                     job()
                     self.output('Done', True, ok=True)
-                except subprocess.CalledProcessError, ce:
+                except subprocess.CalledProcessError as ce:
                     self.output('Failed', True, err=True)
                     self.log(job.name, str(ce))
                     self.log(job.name, ce.output)
-                except Exception, e:
+                except Exception as e:
                     self.output('Failed', True, err=True)
                     self.log(job.name, str(e))
             elif job.name not in sys.argv[1:] or job.name in self.skip:

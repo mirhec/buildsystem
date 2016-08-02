@@ -19,7 +19,7 @@ class SetupBuilder(BaseBuilder):
                 f.write(self.version)
                 
             # run setup
-            self.run([r'C:\Program Files (x86)\Inno Setup 5\ISCC.exe', '/cc', self.setupscript])
+            self.run([r'C:\Program Files (x86)\Inno Setup 5\ISCC.exe', self.setupscript])
             
             # remove git.txt
             os.remove('git.txt')

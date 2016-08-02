@@ -9,6 +9,7 @@ class MsdevBuilder(BaseBuilder):
     target = None
     out_dir = 'bin'
     build_conf = 'Release'
+    append_version = True
 
     @task('compile')
     def compile_it(self):
@@ -20,9 +21,10 @@ class MsdevBuilder(BaseBuilder):
             # now move it to the right location and rename it
             base = os.path.join(self.out_dir, self.target)
             exts_to_move = ['.dll', '.exe', '.lib']
+            v = '-' + self.version if self.append_version else ''
             for f in exts_to_move:
                 if os.path.exists(base + f):
-                    shutil.move(base + f, base + '-' + self.version + f)
+                    shutil.move(base + f, base + v + f)
 
     @task('clean')
     def clean(self):
