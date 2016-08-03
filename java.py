@@ -1,4 +1,5 @@
 ﻿from base import BaseBuilder, Builder, task
+from concurrent.futures import ThreadPoolExecutor
 
 import os
 import shutil
@@ -48,17 +49,19 @@ class JavaBuilder(BaseBuilder):
             cmd = ['javac', '-encoding', 'utf8', '-sourcepath', self.srcdir, '-cp', cp, '-d', self.bindir + '/classes', main]
             self.run(cmd)
         else:
-            files = []
-            for (p, dirs, fs) in os.walk(self.srcdir):
-                for f in fs:
-                    if f[-5:] == '.java':
-                        file = p + '\\' + f
-                        file = file.replace('\\', '/')
-                        files.append(file)
-
-            cmd = ['javac', '-sourcepath', self.srcdir, '-cp', cp, '-d', self.bindir + '/classes']
-            cmd.extend(files)
-            self.run(cmd)
+            with ThreadPoolExecutor(max_workers=4) as executor:
+                files = []
+                for (p, dirs, fs) in os.walk(self.srcdir):
+                    for f in fs:
+                        if f[-5:] == '.java':
+                            file = p + '\\' + f
+                            file = file.replace('\\', '/')
+                            files.append(file)
+                            if len(files) >= 100:
+                                cmd = ['javac', '-sourcepath', self.srcdir, '-cp', cp, '-d', self.bindir + '/classes']
+                                cmd.extend(files)
+                                future = executor.submit(self.run, cmd)
+                                files = []
 
     @task('crypt')
     def do_crypt(self):
