@@ -38,10 +38,11 @@ class Builder:
     '''Base class for all Build System Builder.'''
     product_title = ''
     skip = []
+    logpath = 'build.log'
 
     def __init__(self):
         self.starttime = time.time()
-        pass
+        self.logpath = os.path.join(os.getcwd(), 'build.log')
 
     def conf(self, **kwargs):
         '''Defines all possible configurations for this builder.'''
@@ -86,7 +87,7 @@ class Builder:
 
     def log(self, task, what):
         if 'log_enabled' in dir(self) and self.log_enabled:
-            with open('build.log', 'a') as f:
+            with open(self.logpath, 'a') as f:
                 f.write('%s :: [%s] :: %s\n' % (str(int((time.time() - self.starttime) * 1000)), task, what,))
 
     def output(self, what, newline=False, err=False, ok=False, warn=False):
