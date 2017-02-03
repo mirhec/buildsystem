@@ -8,7 +8,7 @@ import subprocess
 class SevenZipInstaller(BaseBuilder):
     # path to 7z.exe
     path_to_7zip = 'C:/Program Files/7-Zip/7z.exe'
-    self_exectracting = True
+    self_extracting = True
     # path to txt file which contains the base directory on the first line and
     # all files to pack from line 2 to the end
     filestxt = 'files.txt'
@@ -16,7 +16,7 @@ class SevenZipInstaller(BaseBuilder):
 
     @task('gen-file-name')
     def generate_file_name(self):
-        if self.self_exectracting:
+        if self.self_extracting:
             self.dest = 'Setup-' + self.product_title + '-' + self.version + '.exe'
         else:
             self.dest = '' + self.product_title + '-' + self.version + '.7z'
@@ -36,7 +36,7 @@ class SevenZipInstaller(BaseBuilder):
         os.chdir(basefolder)
         files = lines[1:]
 
-        if not self.self_exectracting:
+        if not self.self_extracting:
             cmd = [self.path_to_7zip, 'a', 'package.7z']
             cmd = cmd + files
             self.run(cmd)

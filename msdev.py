@@ -6,7 +6,7 @@ import shutil
 class MsdevBuilder(BaseBuilder):
     msbuild_exe = r'\Lib\MSBuild.exe'
     solution_file = None
-    target = None
+    target = None # Note: Specify ALL projects that must be built or leave it None!
     out_dir = 'bin'
     build_conf = 'Release'
     append_version = True
@@ -14,12 +14,18 @@ class MsdevBuilder(BaseBuilder):
     @task('compile')
     def compile_it(self):
         '''Compiles MSDev solution.'''
-        if self.solution_file and self.target:
+        if self.solution_file:
             me = os.getcwd()
-            self.run([self.msbuild_exe, '/t:build', '/p:Configuration=%s;TargetName=%s' % (self.build_conf, self.target,), '/property:OutDir=%s' % me + '/' + self.out_dir, self.solution_file])
+            if self.target:
+                self.run([self.msbuild_exe, '/t:build', '/p:Configuration=%s;TargetName=%s' % (self.build_conf, self.target,), '/property:OutDir=%s' % me + '/' + self.out_dir, self.solution_file])
+            else:
+                self.run([self.msbuild_exe, '/t:build', '/p:Configuration=%s' % (self.build_conf,), '/property:OutDir=%s' % me + '/' + self.out_dir, self.solution_file])
 
             # now move it to the right location and rename it
-            base = os.path.join(self.out_dir, self.target)
+            if self.target:
+                base = os.path.join(self.out_dir, self.target)
+            else:
+                base = self.out_dir
             exts_to_move = ['.dll', '.exe', '.lib']
             v = '-' + self.version if self.append_version else ''
             for f in exts_to_move:

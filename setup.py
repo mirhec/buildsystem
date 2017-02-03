@@ -24,3 +24,5 @@ class SetupBuilder(BaseBuilder):
             # remove git.txt
             os.remove('git.txt')
             os.chdir(d)
+        else:
+            raise Exception('Setup script does not exist: %s' % os.path.join(self.setupdir, self.setupscript))
