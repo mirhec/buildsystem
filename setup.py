@@ -8,4 +8,5 @@ setup(name='buildsystem',
       author='Mirko Hecky',
       url='https://github.com/mirhec/buildsystem',
       packages=['buildsystem', 'buildsystem.examples'],
+      install_requires=['futures;python_version<"3.4"'],
 )
