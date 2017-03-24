@@ -1,4 +1,5 @@
 ﻿from .base import BaseBuilder, Builder, task
+from .dependency_resolver import FileDependencyResolver
 from concurrent.futures import ThreadPoolExecutor
 
 import os
@@ -8,13 +9,13 @@ import zipfile
 
 class JavaBuilder(BaseBuilder):
     libdir = 'lib'
-    depdir = 'Y:/Lib/Java'
     srcdir = 'src'
     bindir = 'bin'
     jar2exedir = 'cfg'
     version_in_filename = True
     version = None
     pack_all_in_one_jar = True
+    dependency_resolver = FileDependencyResolver('/Lib/Java')
 
     def initbuild(self):
         self.cleandirs = [self.bindir, self.libdir]
@@ -34,7 +35,7 @@ class JavaBuilder(BaseBuilder):
     def do_dependencies(self):
         if not os.path.exists(self.libdir):
             os.mkdir(self.libdir)
-        [shutil.copyfile(self.depdir + '/' + l, self.libdir + '/' + l) for l in self.depends]
+        [self.dependency_resolver.resolve(l, self.libdir) for l in self.depends]
 
     @task('compile')
     def do_compile(self):
