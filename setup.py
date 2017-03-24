@@ -8,5 +8,5 @@ setup(name='buildsystem',
       author='Mirko Hecky',
     #   author_email='gward@python.net',
       url='https://github.com/mirhec/buildsystem',
-      packages=['src', 'examples'],
+      packages=['buildsystem', 'buildsystem.examples'],
      )
