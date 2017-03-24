@@ -1,5 +1,8 @@
 import os
-import urllib
+try:
+    from urllib import urlretrieve
+except:
+    from urllib.request import urlretrieve
 
 class DependencyResolver:
     def resolve(self, dependency, destination):
@@ -17,4 +20,4 @@ class HttpDependencyResolver:
         self.baseurl = baseurl
     
     def resolve(self, dependency, destionation):
-        urllib.urlretrieve(self.baseurl + '/' + dependency, os.path.join(destionation, dependency))
+        urlretrieve(self.baseurl + '/' + dependency, os.path.join(destionation, dependency))
