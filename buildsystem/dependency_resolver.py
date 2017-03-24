@@ -16,5 +16,5 @@ class HttpDependencyResolver:
     def __init__(self, baseurl):
         self.baseurl = baseurl
     
-    def resolv(self, dependency, destionation):
+    def resolve(self, dependency, destionation):
         urllib.urlretrieve(self.baseurl + '/' + dependency, os.path.join(destionation, dependency))
