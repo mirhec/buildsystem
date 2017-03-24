@@ -4,6 +4,13 @@ This is a very simple build system written in python that is hackable and easy t
 The problem I had so far with other build systems was the lack of scripting ability that 
 I needed many times.
 
+## Installation
+In order to install the latest release of buildsystem, run the following command:
+
+```
+pip install https://github.com/mirhec/buildsystem/zipball/master
+```
+
 ## How to use
 Here's an example on how to use the MsdevBuilder. The MsdevBuilder allows you to
 compile and clean your Msdev-Solution (.sln) and specify some options. Here's an
@@ -28,10 +35,10 @@ to set them, either by calling the `conf` method, or by setting them via direct 
 ## How to add your own builder
 Adding your own builder is very easy. You just have to create a new class that inherits
 from `Builder` and add your tasks in that order to be executed and add to each of them
-the `task` decorator. Here is an example:
+the `task` decorator. Here is an example (reate a file called simple.py):
 
 ```python
-from builder import Builder, task
+from buildsystem.builder import Builder, task
 
 class MyBuilder(Builder):
     # here you could declare some configuration properties if you want to
