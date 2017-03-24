@@ -1,4 +1,4 @@
-from builder import Builder, task
+from .builder import Builder, task
 
 
 class MyBuilder(Builder):

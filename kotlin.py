@@ -1,5 +1,5 @@
-from base import BaseBuilder, Builder, task
-from java import JavaBuilder
+from .base import BaseBuilder, Builder, task
+from .java import JavaBuilder
 
 import os
 import shutil

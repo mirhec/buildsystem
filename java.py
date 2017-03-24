@@ -1,4 +1,4 @@
-﻿from base import BaseBuilder, Builder, task
+﻿from .base import BaseBuilder, Builder, task
 from concurrent.futures import ThreadPoolExecutor
 
 import os

@@ -4,7 +4,7 @@ import shutil
 import sys
 import time
 import subprocess
-from color_console import *
+from .color_console import *
 
 jobindex = 1
 

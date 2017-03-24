@@ -1,4 +1,4 @@
-﻿from base import BaseBuilder, task
+﻿from .base import BaseBuilder, task
 import os
 import shutil
 

@@ -1,4 +1,4 @@
-﻿from java import JavaBuilder, task
+﻿from .java import JavaBuilder, task
 
 
 class ModifyJarBuilder(JavaBuilder):
