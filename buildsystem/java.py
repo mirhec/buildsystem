@@ -11,6 +11,7 @@ class JavaBuilder(BaseBuilder):
     libdir = 'lib'
     srcdir = 'src'
     bindir = 'bin'
+    allatori_version = '5.3'
     jar2exedir = 'cfg'
     version_in_filename = True
     version = None
@@ -77,8 +78,9 @@ class JavaBuilder(BaseBuilder):
             self.unpack('lib/%s' % c, self.bindir + '/classes_temp/')
             os.remove('lib/%s' % c)
             self.output('Ok\n   ', ok=True)
+        self.dependency_resolver.resolve('allatori-%s.jar' % self.allatori_version, 'buildlibs')
         self.output('   crypt all ... ')
-        self.run(['java', '-jar', '/Lib/Java/allatori-5.3.jar', 'cfg/allatori.xml'])
+        self.run(['java', '-jar', 'buildlibs/allatori-%s.jar' % self.allatori_version, 'cfg/allatori.xml'])
         shutil.rmtree(self.bindir + '/classes_temp/')
 
     @task('resources')
