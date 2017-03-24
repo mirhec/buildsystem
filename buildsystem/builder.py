@@ -76,9 +76,11 @@ class Builder:
                     self.output('Failed', True, err=True)
                     self.log(job.name, str(ce))
                     self.log(job.name, ce.output)
+                    exit(-1)
                 except Exception as e:
                     self.output('Failed', True, err=True)
                     self.log(job.name, str(e))
+                    exit(-2)
             elif job.name not in sys.argv[1:] or job.name in self.skip:
                 self.output('Skipped', True, warn=True)
             else:
