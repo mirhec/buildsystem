@@ -78,6 +78,8 @@ class JavaBuilder(BaseBuilder):
             self.unpack('lib/%s' % c, self.bindir + '/classes_temp/')
             os.remove('lib/%s' % c)
             self.output('Ok\n   ', ok=True)
+        if not os.path.exists('buildlibs'):
+            os.mkdir('buildlibs')
         self.dependency_resolver.resolve('allatori-%s.jar' % self.allatori_version, 'buildlibs')
         self.output('   crypt all ... ')
         self.run(['java', '-jar', 'buildlibs/allatori-%s.jar' % self.allatori_version, 'cfg/allatori.xml'])
