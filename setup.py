@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from setuptools import setup
+from distutils.core import setup
 
 setup(name='buildsystem',
       version='1.0',
@@ -8,5 +8,4 @@ setup(name='buildsystem',
       author='Mirko Hecky',
       url='https://github.com/mirhec/buildsystem',
       packages=['buildsystem', 'buildsystem.examples'],
-      install_requires=['futures;python_version<"3.4"'],
 )
