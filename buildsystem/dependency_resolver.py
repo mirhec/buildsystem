@@ -1,4 +1,6 @@
 import os
+import shutil
+
 try:
     from urllib import urlretrieve
 except:
