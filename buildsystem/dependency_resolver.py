@@ -1,4 +1,6 @@
 import os
+import shutil
+
 try:
     from urllib import urlretrieve
 except:
@@ -13,7 +15,7 @@ class FileDependencyResolver:
         self.depdir = depdir
 
     def resolve(self, dependency, destination):
-        shutil.copyfile(os.path.join(self.depdir, dependency, os.path.join(destination, dependency)))
+        shutil.copyfile(os.path.join(self.depdir, dependency), os.path.join(destination, dependency))
 
 class HttpDependencyResolver:
     def __init__(self, baseurl):
