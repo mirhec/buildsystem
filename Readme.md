@@ -8,7 +8,7 @@ I needed many times.
 In order to install the latest release of buildsystem, run the following command:
 
 ```
-pip install https://github.com/mirhec/buildsystem/zipball/master
+pip install buildsystem
 ```
 
 ## How to use
