@@ -52,7 +52,36 @@ class Builder:
     def initbuild(self):
         pass
 
+    def output_light(self, what, newline=False):
+        old = get_text_attr()
+        set_text_attr(FOREGROUND_INTENSITY)
+        sys.stdout.write(what)
+        if newline:
+            sys.stdout.write('\n')
+        set_text_attr(old)
+
+    def help(self):
+        self.output(self.__class__.__name__ + ' help:', True)
+        tasks = list(self.get_all_tasks())
+        tasks = self.sorttasks(tasks)
+        cnt = 1
+        max_job_nr = max([f.jobindex for f in tasks])
+
+        # for job in tasks:
+        for i in range(1, max_job_nr + 1):
+            jobs = [f for f in tasks if f.jobindex == i]
+            if len(jobs) <= 0:
+                continue
+            job = jobs[-1]
+            self.output('   ' + str(cnt) + '. ' + job.name + '', True)
+            self.output_light('      ' + job.__doc__, True)
+            cnt += 1
+
     def build(self):
+        if len(sys.argv) == 2 and sys.argv[1] == 'help':
+            self.help()
+            return
+
         self.output(self.__class__.__name__ + ' builds ' + self.product_title, True)
         self.initbuild()
 
