@@ -3,11 +3,11 @@
 from distutils.core import setup
 
 setup(name='buildsystem',
-      version='1.4',
+      version='1.5',
       description='A very simple, python-based and extendable buildsystem.',
       author='Mirko Hecky',
       url='https://github.com/mirhec/buildsystem',
-      download_url='https://github.com/mirhec/buildsystem/archive/1.4.tar.gz',
+      download_url='https://github.com/mirhec/buildsystem/archive/1.5.tar.gz',
       packages=['buildsystem', 'buildsystem.examples'],
       keywords=['buildsystem', 'build', 'automation']
 )
