@@ -90,8 +90,6 @@ class Builder:
         cnt = 1
         max_job_nr = max([f.jobindex for f in tasks])
 
-        self.output('new version', True)
-
         for job in tasks:
             self.output('   ' + str(cnt) + '. ' + job.name + ' ... ')
             if job.name not in self.skip and (job.name in sys.argv[1:] or len(sys.argv) <= 1):
